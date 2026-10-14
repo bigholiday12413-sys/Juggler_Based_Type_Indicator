@@ -27,10 +27,10 @@ def hsl(h, s, l):
 def ramp(h, s, l):
     """モチーフカラー（hl, base）と、彩度を落とした影・輪郭（sh, ol）"""
     return {
-        "hl": hsl(h, s, l + 14),
+        "hl": hsl(h, s * 0.9, l + 9),
         "base": hsl(h, s, l),
-        "sh": hsl(h, s * 0.45, l - 16),
-        "ol": hsl(h, s * 0.35, max(10, l - 40)),
+        "sh": hsl(h, s * 0.5, l - 11),
+        "ol": hsl(h, s * 0.4, max(24, l - 28)),
     }
 
 
@@ -126,7 +126,7 @@ def sphere_shade(cx, cy, r):
         px, py = x + 0.5 - cx, y + 0.5 - cy
         if (px + 0.38 * r) ** 2 + (py + 0.38 * r) ** 2 <= (0.3 * r) ** 2:
             return "hl"
-        if (px + py) / (r * math.sqrt(2)) > 0.45:
+        if (px + py) / (r * math.sqrt(2)) > 0.5:
             return "sh"
         return "base"
     return shade
@@ -163,7 +163,7 @@ class Sprite:
 
 
 # ---- 道具ごとの絵 ----
-GRAY = ramp(30, 12, 42)        # 持ち手の棒など、道具の色を邪魔しない無彩色寄り
+GRAY = ramp(30, 10, 52)        # 持ち手の棒など、道具の色を邪魔しない無彩色寄り
 STRING = hsl(35, 12, 60)       # ひも
 
 
@@ -260,23 +260,22 @@ def cigarbox():
 
 
 def eightring():
-    c = {"hl": (255, 255, 255, 255), "base": hsl(45, 20, 90), "sh": hsl(220, 10, 72), "ol": hsl(220, 12, 38)}
-    grip = ramp(220, 12, 55)
+    # 8の字型のリング（2枚のリングをテープでつないだ形）
+    c = {"hl": (255, 255, 255, 255), "base": hsl(45, 20, 92), "sh": hsl(220, 10, 80), "ol": hsl(220, 10, 52)}
+    tape = ramp(220, 10, 66)
     s = Sprite()
-    s.layer(ellipse_ring(16, 16, 13.5, 13.5, 2.2), c)
-    s.layer(arc_band(16, 16, 12.4, 2.4, 60, 120), grip)
+    s.layer(ellipse_ring(16, 9, 8, 7.5, 2) | ellipse_ring(16, 23, 8, 7.5, 2), c)
+    s.layer(rect(13, 14.5, 18.5, 17.5), tape)
     return s
 
 
 def magbaton():
-    c = ramp(192, 65, 50)
-    spark = hsl(192, 70, 80)
+    # 棒の両端に大きめの球（アイソレーション用のバトン）
+    c = ramp(192, 50, 56)
     s = Sprite()
-    for x, y in ((6, 6), (26, 25), (24, 5)):
-        s.paint({(x, y - 1), (x - 1, y), (x, y), (x + 1, y), (x, y + 1)}, spark)
-    s.layer(capsule(5, 27, 27, 5, 1.2), c)
-    for cx, cy in ((5, 27), (27, 5)):
-        s.layer(circle(cx, cy, 2.6), c, sphere_shade(cx, cy, 2.6))
+    s.layer(capsule(7, 25, 25, 7, 1.1), c)
+    for cx, cy in ((6.5, 25.5), (25.5, 6.5)):
+        s.layer(circle(cx, cy, 4.3), c, sphere_shade(cx, cy, 4.3))
     return s
 
 
@@ -315,7 +314,8 @@ def staff():
 
 
 def shakercup():
-    c = ramp(165, 45, 55)
+    # 金属のカップを重ねた形（ステンレスの銀色）
+    c = ramp(200, 12, 70)
     s = Sprite()
     cups = (
         [(10, 30), (22, 30), (24, 21), (8, 21)],   # 下：上向き
@@ -329,24 +329,24 @@ def shakercup():
 
 
 def flowwand():
-    c = ramp(265, 40, 62)
-    trail = hsl(265, 45, 85)
+    # 細長い棒がふわふわと宙を舞う道具
+    c = ramp(265, 35, 64)
+    trail = hsl(265, 35, 86)
     s = Sprite()
     s.paint(arc_band(30, 30, 18, 1, 190, 250), trail)
     s.paint(arc_band(2, 2, 18, 1, 10, 70), trail)
-    s.layer(capsule(7, 25, 25, 7, 0.8), c)
-    for cx, cy in ((7, 25), (25, 7)):
-        s.layer(circle(cx, cy, 1.8), c, sphere_shade(cx, cy, 1.8))
+    s.layer(capsule(6, 26, 26, 6, 0.7), c)
     return s
 
 
 def dapocto():
-    # 形が未確認のため仮置き（「？」）
-    c = ramp(0, 0, 70)
+    # 回転させる十字（スピニングクロス）。指先で回したり、飛ばしたりする
+    c = ramp(160, 40, 52)
+    hub = ramp(30, 10, 60)
     s = Sprite()
-    s.layer(circle(16, 16, 12), c, sphere_shade(16, 16, 12))
-    q = line([(12, 12), (13, 10), (16, 9), (19, 10), (20, 12), (19, 14), (16, 16), (16, 19)]) | rect(15.5, 22, 16.5, 23)
-    s.paint(q, c["ol"])
+    for x0, y0, x1, y1 in ((16, 16, 3.5, 3.5), (16, 16, 28.5, 3.5), (16, 16, 3.5, 28.5), (16, 16, 28.5, 28.5)):
+        s.layer(profile(x0, y0, x1, y1, lambda t: 1.0 + 1.6 * t), c)
+    s.layer(circle(16, 16, 3), hub, sphere_shade(16, 16, 3))
     return s
 
 
@@ -380,7 +380,7 @@ def kendama():
 
 
 def hat():
-    black = {"hl": hsl(240, 6, 34), "base": hsl(240, 6, 18), "sh": hsl(240, 4, 11), "ol": hsl(240, 5, 6)}
+    black = {"hl": hsl(240, 6, 38), "base": hsl(240, 6, 26), "sh": hsl(240, 5, 19), "ol": hsl(240, 5, 14)}
     ribbon = ramp(350, 60, 42)
     s = Sprite()
     s.layer(ellipse(16, 24, 14.5, 4), black)
