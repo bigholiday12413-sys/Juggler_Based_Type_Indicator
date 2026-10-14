@@ -174,10 +174,14 @@ export function axisScores(model, answers) {
     .map((ax) => ({ axis: ax, score: sum[ax.id] / weight[ax.id], answered: weight[ax.id] }));
 }
 
-// アンケートで選ばれた道具（よくやる順）に、学習用の重みを付ける
+// アンケートで選ばれた道具（よくやる順）に、学習用の重みを付ける。
+// labels の要素は道具ID（文字列）か、自由記入 { other: "道具名" }。自由記入は学習に使わないが、順位の枠は占める
 export function labelWeights(labels, config) {
   const ws = config.labelWeights;
-  return labels.slice(0, ws.length).map((toolId, i) => ({ toolId, weight: ws[i] }));
+  return labels
+    .slice(0, ws.length)
+    .map((label, i) => ({ toolId: label, weight: ws[i] }))
+    .filter(({ toolId }) => typeof toolId === "string");
 }
 
 // 1件の回答をカウントに足す（サーバーのSQLと同じ処理。生ログからの再集計や検証に使う）

@@ -8,7 +8,8 @@ export async function onRequestGet({ request, env, waitUntil }) {
 
   const [rows, total] = await Promise.all([
     env.DB.prepare("SELECT question, tool, answer, n FROM counts").all(),
-    env.DB.prepare("SELECT COUNT(*) AS c FROM responses WHERE labels <> '[]'").first(),
+    // 学習済み回答数：道具ID（文字列）を1つ以上含む回答だけを数える（自由記入のみ・ジャグリングをしていない人は除く）
+    env.DB.prepare("SELECT COUNT(*) AS c FROM responses WHERE EXISTS (SELECT 1 FROM json_each(labels) WHERE type = 'text')").first(),
   ]);
 
   const counts = {};

@@ -60,7 +60,8 @@ button:disabled { opacity: 0.4; cursor: default; }
   width: 1.4em; height: 1.4em; line-height: 1.4em; border-radius: 50%;
   background: var(--accent); color: #fff; font-size: 0.75rem;
 }
-.none { display: block; margin: 12px 0; font-size: 0.9rem; }
+.tool-list button.special { grid-column: 1 / -1; }
+.other-input { grid-column: 1 / -1; width: 100%; font: inherit; padding: 10px; border: 1px solid var(--line); border-radius: 8px; }
 #turnstile { margin: 12px 0; }
 .error { color: var(--accent); }
 .after { margin-top: 24px; text-align: center; }

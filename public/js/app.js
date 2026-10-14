@@ -54,7 +54,6 @@ function show(name) {
 
 function start() {
   state.answers = [];
-  state.labels = [];
   nextQuestion();
   show("question");
 }
@@ -132,48 +131,72 @@ function showResult() {
   const nearby = ranked.slice(1, 1 + nearbyCount).map((r) => r.tool.name);
   $("r-nearby").textContent = nearby.length ? `ほかにも、${nearby.join("・")}がこちらを気にしています。` : "";
 
+  state.labels = [];
   renderSurvey();
   $("survey").hidden = false;
   $("after").hidden = true;
   show("result");
 }
 
+// アンケートの選択肢：道具一覧＋「その他（自由記入）」＋「ジャグリングはしていない」。
+// state.labels はよくやる順の選択（道具ID または OTHER）。NONE は単独でしか選べない
+const OTHER = "__other__";
+const NONE = "__none__";
+
 function renderSurvey() {
   const { model } = state;
   const max = model.config.labelWeights.length;
   const list = $("s-tools");
+  const other = $("s-other");
   list.replaceChildren();
-  $("s-none").checked = false;
+  other.value = "";
   $("s-error").hidden = true;
 
   const refresh = () => {
-    for (const btn of list.children) {
+    for (const btn of list.querySelectorAll("button")) {
       const rank = state.labels.indexOf(btn.dataset.tool);
-      if (rank >= 0) btn.dataset.rank = rank + 1;
+      if (rank >= 0 && btn.dataset.tool !== NONE) btn.dataset.rank = rank + 1;
       else delete btn.dataset.rank;
-      btn.disabled = $("s-none").checked;
+      btn.setAttribute("aria-pressed", String(rank >= 0));
     }
-    $("btn-send").disabled = !$("s-none").checked && state.labels.length === 0;
+    other.hidden = !state.labels.includes(OTHER);
+    const otherFilled = !state.labels.includes(OTHER) || other.value.trim() !== "";
+    $("btn-send").disabled = state.labels.length === 0 || !otherFilled;
   };
 
-  for (const tool of model.tools) {
+  const addChoice = (id, name, special = false) => {
     const btn = document.createElement("button");
-    btn.textContent = tool.name;
-    btn.dataset.tool = tool.id;
+    btn.textContent = name;
+    btn.dataset.tool = id;
+    if (special) btn.className = "special";
     btn.addEventListener("click", () => {
-      const i = state.labels.indexOf(tool.id);
+      const i = state.labels.indexOf(id);
       if (i >= 0) state.labels.splice(i, 1);
-      else if (state.labels.length < max) state.labels.push(tool.id);
+      else if (id === NONE) state.labels = [NONE];
+      else {
+        state.labels = state.labels.filter((l) => l !== NONE);
+        if (state.labels.length < max) state.labels.push(id);
+      }
       refresh();
+      if (id === OTHER && state.labels.includes(OTHER)) other.focus();
     });
     list.append(btn);
-  }
-  $("s-none").onchange = () => {
-    if ($("s-none").checked) state.labels = [];
-    refresh();
   };
+
+  for (const tool of model.tools) addChoice(tool.id, tool.name);
+  addChoice(OTHER, "その他（自由記入）", true);
+  list.append(other);
+  addChoice(NONE, "ジャグリングはしていない", true);
+  other.oninput = refresh;
   refresh();
   renderTurnstile();
+}
+
+// 送信用の形：道具ID はそのまま、その他は { other: 道具名 }、ジャグリングをしていない人は空
+function surveyLabels() {
+  return state.labels
+    .filter((l) => l !== NONE)
+    .map((l) => (l === OTHER ? { other: $("s-other").value.trim() } : l));
 }
 
 function renderTurnstile() {
@@ -198,7 +221,7 @@ async function send() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         answers: state.answers,
-        labels: state.labels,
+        labels: surveyLabels(),
         ranking: state.ranking,
         turnstileToken: token,
       }),
@@ -218,7 +241,7 @@ async function send() {
 function showAfter() {
   const top = state.model.tools.find((t) => t.id === state.ranking[0]);
   let message;
-  if (state.labels.length === 0) {
+  if (state.labels.includes(NONE)) {
     message = `${top.name}は、あなたと似た考えの人たちがやっている道具です。よかったら始めてみてください。`;
   } else if (state.labels.includes(top.id)) {
     message = `${top.name}とは両想いでした！ご協力ありがとうございました。`;

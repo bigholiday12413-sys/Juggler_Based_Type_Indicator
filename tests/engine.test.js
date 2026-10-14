@@ -112,3 +112,9 @@ test("探索率：回答が増えるほど下がり、下限で止まる", () =>
   assert.ok(explorationRate(c, c.exploration.rampResponses / 2) < 1);
   assert.equal(explorationRate(c, c.exploration.rampResponses * 10), c.exploration.min);
 });
+
+test("アンケートの自由記入：学習に使わないが、順位の枠は占める", () => {
+  const counts = applyResponse({}, [{ q: "b01", a: 4 }], [{ other: "ヨーヨー" }, "ring"], data.config);
+  assert.deepEqual(Object.keys(counts.b01), ["ring"]);
+  assert.equal(counts.b01.ring[4], data.config.labelWeights[1]);
+});

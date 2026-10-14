@@ -7,6 +7,7 @@ import { labelWeights, sessionLength } from "../../public/js/engine.js";
 const questionIds = new Set(questions.map((q) => q.id));
 const toolIds = new Set(tools.map((t) => t.id));
 const levels = config.scale.labels.length;
+const OTHER_MAX = 40; // 自由記入の最大文字数
 
 function bad(message) {
   return Response.json({ ok: false, error: message }, { status: 400 });
@@ -44,7 +45,16 @@ export async function onRequestPost({ request, env }) {
     seen.add(x.q);
   }
   if (!Array.isArray(labels) || labels.length > config.labelWeights.length) return bad("アンケートの選択数が違います");
-  if (new Set(labels).size !== labels.length || !labels.every((t) => toolIds.has(t))) return bad("道具IDが不正です");
+  const cleanLabels = [];
+  for (const label of labels) {
+    if (typeof label === "string" && toolIds.has(label)) cleanLabels.push(label);
+    else if (typeof label?.other === "string" && label.other.trim() && label.other.trim().length <= OTHER_MAX)
+      cleanLabels.push({ other: label.other.trim() });
+    else return bad("道具の指定が不正です");
+  }
+  const toolLabels = cleanLabels.filter((l) => typeof l === "string");
+  if (new Set(toolLabels).size !== toolLabels.length || cleanLabels.length - toolLabels.length > 1)
+    return bad("道具の指定が重複しています");
   if (!Array.isArray(ranking) || !ranking.every((t) => toolIds.has(t))) return bad("結果の道具IDが不正です");
 
   const ok = await verifyTurnstile(env, turnstileToken, request.headers.get("CF-Connecting-IP"));
@@ -54,13 +64,13 @@ export async function onRequestPost({ request, env }) {
   const statements = [
     env.DB.prepare(
       "INSERT INTO responses (config_version, answers, labels, ranking) VALUES (?, ?, ?, ?)",
-    ).bind(config.version, JSON.stringify(cleanAnswers), JSON.stringify(labels), JSON.stringify(ranking)),
+    ).bind(config.version, JSON.stringify(cleanAnswers), JSON.stringify(cleanLabels), JSON.stringify(ranking)),
   ];
   const upsert = env.DB.prepare(
     "INSERT INTO counts (question, tool, answer, n) VALUES (?, ?, ?, ?) " +
       "ON CONFLICT (question, tool, answer) DO UPDATE SET n = n + excluded.n",
   );
-  for (const { toolId, weight } of labelWeights(labels, config)) {
+  for (const { toolId, weight } of labelWeights(cleanLabels, config)) {
     for (const { q, a } of cleanAnswers) statements.push(upsert.bind(q, toolId, a, weight));
   }
   await env.DB.batch(statements);
