@@ -101,7 +101,11 @@ function showResult() {
   const top = ranked[0].tool;
 
   $("r-tool").textContent = top.name;
-  $("r-illust").textContent = `${top.name}（絵は準備中）`;
+  const img = document.createElement("img");
+  img.src = `img/tools/${top.id}.png`;
+  img.alt = top.name;
+  img.onerror = () => $("r-illust").replaceChildren(`${top.name}（絵は準備中）`);
+  $("r-illust").replaceChildren(img);
 
   // 本人の位置がはっきりしている軸から順に、短く出す
   const scores = axisScores(model, state.answers)

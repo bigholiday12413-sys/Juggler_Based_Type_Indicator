@@ -15,7 +15,8 @@ body {
   line-height: 1.7;
 }
 main { max-width: 560px; margin: 0 auto; padding: 32px 16px 64px; }
-h1 { font-size: 1.6rem; }
+h1 { font-size: 1.6rem; margin-bottom: 0; }
+.reading { margin-top: 0; color: var(--muted); font-size: 0.85rem; }
 h2 { font-size: 1.25rem; min-height: 4em; }
 .sub, .progress, .nearby { color: var(--muted); font-size: 0.9rem; }
 .notes { font-size: 0.85rem; color: var(--muted); padding-left: 1.2em; }
@@ -38,9 +39,9 @@ button:disabled { opacity: 0.4; cursor: default; }
 .illust {
   width: 192px; height: 192px; margin: 16px auto;
   display: grid; place-items: center;
-  border: 2px dashed var(--line); color: var(--muted); font-size: 0.8rem;
-  image-rendering: pixelated;
+  color: var(--muted); font-size: 0.8rem;
 }
+.illust img { width: 100%; height: 100%; image-rendering: pixelated; }
 .axes { margin: 16px 0; }
 .axis-row { margin: 12px 0; font-size: 0.9rem; }
 .axis-bar { display: flex; align-items: center; gap: 8px; }
