@@ -1,0 +1,12 @@
+name = "juggler-type-indicator"
+pages_build_output_dir = "public"
+compatibility_date = "2025-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "juggler-type-indicator"
+# `npx wrangler d1 create juggler-type-indicator` で表示されるIDに置き換える
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# Turnstile（ボット判定）を使うときは、Pagesの環境変数に TURNSTILE_SITE_KEY と TURNSTILE_SECRET を設定する

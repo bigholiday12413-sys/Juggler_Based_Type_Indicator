@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ジャグラー道具診断</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <section id="screen-start" class="screen">
+      <h1>ジャグラー道具診断</h1>
+      <p class="lead">30の質問に答えると、あなたに熱い視線を送っている道具がわかります。</p>
+      <p class="sub">この診断はまだ修行中です。答えてくれたあなたの回答で、少しずつ賢くなっていきます。</p>
+      <ul class="notes">
+        <li>この診断は、どの団体・大会とも関係のない非公式のものです。</li>
+        <li>回答結果は、診断の精度を上げるために使わせていただきます。</li>
+      </ul>
+      <button id="btn-start" class="primary" disabled>読み込み中…</button>
+    </section>
+
+    <section id="screen-question" class="screen" hidden>
+      <p class="progress"><span id="q-number"></span> / <span id="q-total"></span></p>
+      <h2 id="q-text"></h2>
+      <div id="q-scale" class="scale" role="radiogroup"></div>
+      <button id="btn-next" class="primary" disabled>次へ</button>
+    </section>
+
+    <section id="screen-result" class="screen" hidden>
+      <p class="result-lead"><span id="r-tool"></span>があなたをみています・・・</p>
+      <div id="r-illust" class="illust" aria-hidden="true"></div>
+      <div id="r-axes" class="axes"></div>
+      <p id="r-nearby" class="nearby"></p>
+
+      <div id="survey" class="survey">
+        <h3>最後にアンケートにご協力ください</h3>
+        <p>普段よくやっている道具を、よくやる順に3つまで選んでください。</p>
+        <div id="s-tools" class="tool-list"></div>
+        <label class="none"><input type="checkbox" id="s-none"> ジャグリングはしていない</label>
+        <div id="turnstile"></div>
+        <button id="btn-send" class="primary" disabled>送信</button>
+        <p id="s-error" class="error" hidden></p>
+      </div>
+
+      <div id="after" class="after" hidden>
+        <p id="a-message"></p>
+        <button id="btn-retry">もう一度診断する</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

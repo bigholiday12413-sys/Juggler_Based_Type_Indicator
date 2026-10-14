@@ -1,0 +1,16 @@
+[
+  { "id": "compete", "low": "表現", "high": "競技", "display": true },
+  { "id": "active", "low": "静", "high": "動", "display": true },
+  { "id": "stylish", "low": "素朴・本質", "high": "見た目・おしゃれ", "display": true },
+  { "id": "mystic", "low": "現代・幾何学", "high": "神秘・不思議", "display": true },
+  { "id": "ethnic", "low": "都会的", "high": "民族的", "display": true },
+  { "id": "group", "low": "ひとりで", "high": "みんなで", "display": true },
+  { "id": "challenge", "low": "堅実", "high": "挑戦", "display": true },
+  { "id": "rhythm", "low": "マイペース", "high": "リズム", "display": true },
+  { "id": "retro", "low": "新しさ", "high": "古き良き", "display": true },
+  { "id": "beauty", "low": "実用", "high": "美しさ", "display": true },
+  { "id": "craft", "low": "直感", "high": "職人", "display": true },
+  { "id": "classical", "low": "", "high": "クラシック", "display": false },
+  { "id": "pop", "low": "", "high": "ポップス", "display": false },
+  { "id": "jazz", "low": "", "high": "ジャズ", "display": false }
+]

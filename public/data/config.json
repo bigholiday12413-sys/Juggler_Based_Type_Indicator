@@ -1,0 +1,23 @@
+{
+  "version": "phase1-draft-1",
+  "scale": {
+    "labels": ["まったくそう思わない", "あまりそう思わない", "どちらでもない", "ややそう思う", "とてもそう思う"]
+  },
+  "session": {
+    "quotas": { "business": 21, "fortune": 9 }
+  },
+  "prior": {
+    "pseudoCount": 4,
+    "strength": 0.35,
+    "sigma": 0.5
+  },
+  "exploration": {
+    "min": 0.1,
+    "rampResponses": 2000
+  },
+  "labelWeights": [1, 0.6, 0.3],
+  "result": {
+    "axesShown": 3,
+    "nearbyCount": 3
+  }
+}

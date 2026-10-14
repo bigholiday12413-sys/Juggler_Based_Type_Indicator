@@ -1,0 +1,21 @@
+[
+  { "id": "diabolo", "name": "ディアボロ", "axes": { "compete": 1 } },
+  { "id": "ball", "name": "ボール", "axes": { "stylish": -1 } },
+  { "id": "ring", "name": "リング", "axes": { "compete": -1 } },
+  { "id": "club", "name": "クラブ", "axes": { "challenge": 1 } },
+  { "id": "devilstick", "name": "デビルスティック", "axes": { "stylish": 1 } },
+  { "id": "flowerstick", "name": "フラワースティック", "axes": { "compete": 0 } },
+  { "id": "cigarbox", "name": "シガーボックス", "axes": { "compete": 0.7, "active": 0.5 } },
+  { "id": "eightring", "name": "エイトリング", "axes": { "active": -1, "beauty": 0.7, "classical": 1 } },
+  { "id": "magbaton", "name": "マグネティックバトン", "axes": { "mystic": -1, "active": 1, "rhythm": 0.7 } },
+  { "id": "poi", "name": "ポイ", "axes": { "compete": -0.7, "beauty": 1, "active": 1 } },
+  { "id": "contactball", "name": "コンタクトボール", "axes": { "mystic": 1, "active": -1 } },
+  { "id": "staff", "name": "スタッフ", "axes": { "active": 1, "ethnic": 0.5 } },
+  { "id": "shakercup", "name": "シェーカーカップ", "axes": { "stylish": 1, "retro": -0.5 } },
+  { "id": "flowwand", "name": "フロウワンド", "axes": { "beauty": 0.8, "active": -0.3 } },
+  { "id": "dapocto", "name": "ダポクト", "axes": { "active": -1, "group": 1 } },
+  { "id": "trickrope", "name": "トリックロープ", "axes": { "craft": 1, "stylish": -0.7 } },
+  { "id": "buugeng", "name": "ブゲン", "axes": { "ethnic": 0.7, "mystic": 0.7 } },
+  { "id": "kendama", "name": "けん玉", "axes": { "active": -0.7, "rhythm": 0.7, "pop": 1 } },
+  { "id": "hat", "name": "ハット", "axes": { "stylish": 1, "retro": 1, "jazz": 1 } }
+]
